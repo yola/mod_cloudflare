@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --with apache2
+
+override_dh_auto_build:
+	LTFLAGS="--no-silent" apxs2 \
+		-S CFLAGS="$(CFLAGS) -D_LARGEFILE64_SOURCE $(CPPFLAGS)" \
+		-c mod_cloudflare.c
+
+GIT_REPO ?= https://github.com/cloudflare/mod_cloudflare
+get-packaged-orig-source:
+	set -e; \
+	DATE=$(shell dpkg-parsechangelog | sed -rne 's,^Version: .*git([0-9]{4})([0-9]{2})([0-9]{2}).*,\1-\2-\3,p'); \
+	VER=$(shell dpkg-parsechangelog | sed -rne 's,^Version: ([^-]+).*,\1,p'); \
+	git clone $(GIT_REPO) libapache2-mod-cloudflare; \
+	REF=$$(TZ=UTC git -C libapache2-mod-cloudflare log -n 1 --until $$DATE --pretty=format:%H); \
+	git -C libapache2-mod-cloudflare checkout $$REF; \
+	git -C libapache2-mod-cloudflare archive --format=tar --prefix=libapache2-mod-cloudflare-$$VER/ HEAD | \
+	    xz -c > libapache2-mod-cloudflare_$$VER.orig.tar.xz; \
+	rm -rf libapache2-mod-cloudflare

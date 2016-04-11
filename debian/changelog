@@ -1,0 +1,5 @@
+libapache2-mod-cloudflare (1.2.0+git20150423-1) UNRELEASED; urgency=medium
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- Stefano Rivera <stefanor@debian.org>  Mon, 11 Apr 2016 14:54:55 -0700
