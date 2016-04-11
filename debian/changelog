@@ -1,3 +1,10 @@
+libapache2-mod-cloudflare (2016.8.0~git20160817-0~ppa1~ubuntu12.04) precise; urgency=medium
+
+  * Build for Yola PPA.
+  * Backport to Ubuntu 12.04
+
+ -- Stefano Rivera <stefanor@ubuntu.com>  Mon, 11 Apr 2016 15:25:39 -0700
+
 libapache2-mod-cloudflare (2016.8.0~git20160817-1) UNRELEASED; urgency=medium
 
   * Initial release. (Closes: #XXXXXX)

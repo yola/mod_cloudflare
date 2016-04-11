@@ -2,13 +2,15 @@ Source: libapache2-mod-cloudflare
 Section: contrib/httpd
 Priority: extra
 Maintainer: Stefano Rivera <stefanor@debian.org>
-Build-Depends: apache2-dev, debhelper (>= 9), dh-apache2
+Build-Depends:
+ apache2-prefork-dev (>= 2.2.3) | apache2-threaded-dev (>= 2.2.3),
+ debhelper (>= 9)
 Standards-Version: 3.9.7
 Homepage: https://www.cloudflare.com/resources-downloads#mod_cloudflare
 
 Package: libapache2-mod-cloudflare
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: apache2.2-common, ${misc:Depends}, ${shlibs:Depends}
 Description: log CloudFlare clients' IPs in Apache logs
  Based on mod_remoteip.c, this Apache extension will replace the remote_ip
  variable in user's logs with the correct remote IP sent from CloudFlare. The
