@@ -1,4 +1,4 @@
-libapache2-mod-cloudflare (1.2.0+git20150423-1) UNRELEASED; urgency=medium
+libapache2-mod-cloudflare (2016.8.0~git20160817-1) UNRELEASED; urgency=medium
 
   * Initial release. (Closes: #XXXXXX)
 
