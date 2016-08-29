@@ -21,7 +21,6 @@
  * CloudFlareIPHeader CF-Connecting-IP
  * CloudFlareIPTrustedProxy 204.93.173.0/24
  *
- * Version 1.0.3
  */
 
 #include "ap_config.h"
@@ -43,26 +42,29 @@ module AP_MODULE_DECLARE_DATA cloudflare_module;
 /* CloudFlare IP Ranges from https://www.cloudflare.com/ips */
 static const char* CF_DEFAULT_TRUSTED_PROXY[] = {
 /* IPv4 Address Ranges */
-  "199.27.128.0/21",
-  "173.245.48.0/20",
   "103.21.244.0/22",
   "103.22.200.0/22",
   "103.31.4.0/22",
-  "141.101.64.0/18",
+  "104.16.0.0/12",
   "108.162.192.0/18",
-  "190.93.240.0/20",
+  "131.0.72.0/22",
+  "141.101.64.0/18",
+  "162.158.0.0/15",
+  "172.64.0.0/13",
+  "173.245.48.0/20",
   "188.114.96.0/20",
+  "190.93.240.0/20",
   "197.234.240.0/22",
   "198.41.128.0/17",
-  "162.158.0.0/15",
-  "104.16.0.0/12",
-  "172.64.0.0/13",
+  "199.27.128.0/21",
 /* IPv6 Address Ranges */
   "2400:cb00::/32",
+  "2405:8100::/32",
+  "2405:b500::/32",
   "2606:4700::/32",
   "2803:f800::/32",
-  "2405:b500::/32",
-  "2405:8100::/32",
+  "2c0f:f248::/32",
+  "2a06:98c0::/29",
 };
 static const size_t CF_DEFAULT_TRUSTED_PROXY_COUNT = 
   sizeof(CF_DEFAULT_TRUSTED_PROXY)/sizeof(char *);
@@ -277,8 +279,17 @@ static int cloudflare_modify_connection(request_rec *r)
     char *eos;
     unsigned char *addrbyte;
     void *internal = NULL;
+    const char *cf_visitor_header = NULL;
 
     apr_pool_userdata_get((void*)&conn, "mod_cloudflare-conn", c->pool);
+
+    cf_visitor_header = apr_table_get(r->headers_in, "CF-Visitor");
+    if (cf_visitor_header != NULL) {
+        if ((remote) && (strstr(cf_visitor_header, "https") != NULL)) {
+            apr_table_t *e = r->subprocess_env;
+            apr_table_addn(e, "HTTPS", "on");
+        }
+    }
 
     if (conn) {
         if (remote && (strcmp(remote, conn->prior_remote) == 0)) {
